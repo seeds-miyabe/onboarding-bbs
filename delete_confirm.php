@@ -5,11 +5,13 @@
 require_once 'private/bootstrap.php';
 require_once 'private/database.php';
 
+
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * セッションにも保存しておく
  * -------------------------------------------------- */
-$id = '';
+$connection = connectDB();
+$id = $_POST['id'] ?? '';
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
@@ -17,18 +19,36 @@ $id = '';
  * 1.値が入力されているか
  * 2.データベースに対象IDのレコードが存在するか
  * -------------------------------------------------- */
+if ($id === '' || !ctype_digit($id)) {
+    header('Location: index.php');
+    exit;
+}
+
+$sql = "SELECT * FROM articles WHERE id = ?";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$article = $stmt->get_result()->fetch_assoc();
+
+if (!$article) {
+    header('Location: index.php');
+    exit;
+}
 
 /* --------------------------------------------------
  * 削除する投稿のデータ
  * -------------------------------------------------- */
-$name = '';
-$content = '';
+$name = $article['name'];
+$content = $article['content'];
 
 /* --------------------------------------------------
  * 確認画面と削除画面で利用するトークンを発行する
  * 今回は時刻をトークンとする
  * -------------------------------------------------- */
 $token = strval(time());
+
+$_SESSION['delete'][$token] = $id;
 
 ?>
 
