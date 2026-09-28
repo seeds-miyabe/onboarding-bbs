@@ -5,3 +5,5 @@
  * ---------------------------------------- */
 require_once 'exception_handler.php';
 require_once 'helper.php';
+
+session_start();

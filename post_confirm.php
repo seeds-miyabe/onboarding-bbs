@@ -7,13 +7,15 @@ require_once 'private/bootstrap.php';
 /* --------------------------------------------------
  * セッション開始
  * -------------------------------------------------- */
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * セッションにも保存しておく
  * -------------------------------------------------- */
-$name = '';
-$content =  '';
+$name = $_POST['name'] ?? '';
+$content = $_POST['content'] ?? '';
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
@@ -21,8 +23,9 @@ $content =  '';
  * 入力された値が正しいフォーマットで送られているかを確認する
  * 今回は値が入力されているかのみを確認する
  * -------------------------------------------------- */
-if(true) {
-    redirect('/index.php');
+if ($name === '' || $content === '') {
+    header('Location: index.php');
+    exit;
 }
 
 /* --------------------------------------------------
@@ -30,6 +33,11 @@ if(true) {
  * 今回は時刻をトークンとする
  * -------------------------------------------------- */
 $token = strval(time());
+
+$_SESSION['post'][$token] = [
+    'name'    => $_POST['name'] ?? '',
+    'content' => $_POST['content'] ?? ''
+];
 
 ?>
 
@@ -55,7 +63,7 @@ $token = strval(time());
             </tbody>
         </table>
         <form action="post_complete.php" method="post">
-            <input type="hidden" name="token" value="<?= $token ?>">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token, ENT_QUOTES, 'UTF-8') ?>">
             <button type="submit">投稿</button>
         </form>
     </main>
