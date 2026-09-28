@@ -63,7 +63,6 @@ $articles = $result->fetch_all(MYSQLI_ASSOC);
         <ul>
             <?php foreach ($articles as $article) { ?>
                 <li>
-                    <li>
                     <div>
                         <?= htmlspecialchars($article['id'], ENT_QUOTES, 'UTF-8') ?>:&nbsp;
                         <?= htmlspecialchars($article['name'], ENT_QUOTES, 'UTF-8') ?>&nbsp;
@@ -75,7 +74,7 @@ $articles = $result->fetch_all(MYSQLI_ASSOC);
                     <div>
                         <?= nl2br(htmlspecialchars($article['content'], ENT_QUOTES, 'UTF-8')) ?>
                     </div>
-                    <div style="display: inline-flex; display: none">
+                    <div style="display: inline-flex;">
                         <form action="editing.php" method="post">
                             <input type="hidden" name="id" value="<?= $article['id'] ?>">
                             <button type="submit">編集</button>
