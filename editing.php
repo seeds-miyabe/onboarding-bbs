@@ -9,7 +9,9 @@ require_once 'private/database.php';
  * 送られてきた値を取得する
  * セッションにも保存しておく
  * -------------------------------------------------- */
-$id = '';
+// $id = '';
+$connection = connectDB();
+$id = $_POST['id'] ?? '';
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
@@ -18,26 +20,36 @@ $id = '';
  * 2.データベースに対象IDのレコードが存在するか
  * -------------------------------------------------- */
 // 1.値が入力されているか
-if(true) {
+if ($id === '' || !ctype_digit($id)) {
     redirect('/index.php');
 }
 
+$sql = "SELECT * FROM articles WHERE id = ?";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$article = $stmt->get_result()->fetch_assoc();
+
+
 // 2.データベースに対象IDのレコードが存在するか
-if(true) {
+if (!$article) {
     redirect('/index.php');
 }
 
 /* --------------------------------------------------
  * 編集する投稿のデータ
  * -------------------------------------------------- */
-$name = '';
-$content = '';
+$name = $article['name'];
+$content = $article['content'];
 
 /* --------------------------------------------------
  * 編集画面と編集完了画面で利用するトークンを発行する
  * 今回は時刻をトークンとする
  * -------------------------------------------------- */
 $token = strval(time());
+
+$_SESSION['edit'][$token] = $id;
 
 ?>
 
@@ -80,7 +92,10 @@ $token = strval(time());
                 </tr>
                 </tbody>
             </table>
-            <button type="submit">編集</button>
+            <form action="edit_complete.php" method="post">
+                <input type="hidden" name="token" value="<?= $token ?>">
+                <button type="submit">編集</button>
+            </form>
         </form>
     </main>
     <footer>
