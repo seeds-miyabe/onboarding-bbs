@@ -69,8 +69,8 @@ $_SESSION['delete'][$token] = $id;
         <div>下記の内容を削除しますがよろしいですか?</div>
         <table>
             <tbody>
-            <tr><th>名前</th><td><?= $name ?></td></tr>
-            <tr><th>投稿内容</th><td><?= $content ?></td></tr>
+                <tr><th>名前</th><td><?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?></td></tr>
+                <tr><th>投稿内容</th><td><?= htmlspecialchars($content, ENT_QUOTES, 'UTF-8') ?></td></tr>
             </tbody>
         </table>
         <form action="delete_complete.php" method="post">

@@ -84,11 +84,11 @@ $_SESSION['edit'][$token] = $id;
                 <tbody>
                 <tr>
                     <th><label for="name">名前</label></th>
-                    <td><input type="text" name="name" id="name" value="<?= $name ?>" required></td>
+                    <td><input type="text" name="name" id="name" value="<?= htmlspecialchars($name ?? '', ENT_QUOTES, 'UTF-8') ?>" required></td>
                 </tr>
                 <tr>
                     <th><label for="content">投稿内容</label></th>
-                    <td><textarea name="content" id="content" rows="4" required><?= $content ?></textarea></td>
+                    <td><textarea name="content" id="content" rows="4" required><?= htmlspecialchars($content ?? '', ENT_QUOTES, 'UTF-8') ?></textarea></td>
                 </tr>
                 </tbody>
             </table>
