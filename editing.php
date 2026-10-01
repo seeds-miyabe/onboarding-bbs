@@ -49,7 +49,7 @@ $content = $article['content'];
  * -------------------------------------------------- */
 $token = strval(time());
 
-$_SESSION['edit'][$token] = $id;
+$_SESSION['id']= $id;
 
 ?>
 
