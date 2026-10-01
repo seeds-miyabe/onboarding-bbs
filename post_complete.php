@@ -8,11 +8,19 @@ require_once 'private/database.php';
 /* --------------------------------------------------
  * セッション開始
  * -------------------------------------------------- */
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * -------------------------------------------------- */
-$token = '';
+// $name = $_POST['name'] ?? '';
+// $content = $_POST['content'] ?? '';
+
+$token = $_POST['token'] ?? '';
+$name    = $_SESSION['post'][$token]['name'] ?? '';
+$content = $_SESSION['post'][$token]['content'] ?? '';
+
 
 /* --------------------------------------------------
  * 送られてきたトークンのバリデーション
@@ -20,28 +28,47 @@ $token = '';
  * セッションに保存されているトークンと比較し、
  * 一致していなかった場合はトップ画面にリダイレクトする
  * -------------------------------------------------- */
-if(true) {
-    unset($_SESSION['token']);
-    redirect('/index.php');
+// if(true) {
+//     unset($_SESSION['token']);
+//     redirect('/index.php');
+// }
+
+if ($token === '' || !isset($_SESSION['post'][$token])) {
+    unset($_SESSION['post'][$token]);
+    header('Location: index.php');
+    exit;
+}
+
+if ($name === '' || $content === '') {
+    unset($_SESSION['post'][$token]);
+    header('Location: index.php');
+    exit;
 }
 
 /* --------------------------------------------------
  * セッション内に保存した投稿内容を取得する
  * -------------------------------------------------- */
-$name = '';
-$content = '';
+$name    = $_SESSION['post'][$token]['name'] ?? '';
+$content = $_SESSION['post'][$token]['content'] ?? '';
 
 /* --------------------------------------------------
  * データベース接続
  * -------------------------------------------------- */
-
+$connection = connectDB();
 /* --------------------------------------------------
  * データのインサート処理
  * -------------------------------------------------- */
-
+$sql = "INSERT INTO articles (name, content) VALUES (?, ?)";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("ss", $name, $content);
+$stmt->execute();
 /* --------------------------------------------------
  * セッション内のデータを削除する
  * -------------------------------------------------- */
+unset($_SESSION['post'][$token]);
+
+// header('Location: index.php');
+// exit;
 
 ?>
 

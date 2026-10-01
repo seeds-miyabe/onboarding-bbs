@@ -9,7 +9,8 @@ require_once 'private/database.php';
  * 送られてきた値を取得する
  * セッションにも保存しておく
  * -------------------------------------------------- */
-$id = '';
+// $id = '';
+$id = $_POST['id'] ?? '';
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
@@ -18,26 +19,38 @@ $id = '';
  * 2.データベースに対象IDのレコードが存在するか
  * -------------------------------------------------- */
 // 1.値が入力されているか
-if(true) {
+if ($id === '' || !ctype_digit($id)) {
     redirect('/index.php');
 }
 
+$connection = connectDB();
+$sql = "SELECT * FROM articles WHERE id = ?";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$article = $stmt->get_result()->fetch_assoc();
+
+
 // 2.データベースに対象IDのレコードが存在するか
-if(true) {
+if (!$article) {
     redirect('/index.php');
 }
 
 /* --------------------------------------------------
  * 編集する投稿のデータ
  * -------------------------------------------------- */
-$name = '';
-$content = '';
+$name = $article['name'];
+$content = $article['content'];
 
 /* --------------------------------------------------
  * 編集画面と編集完了画面で利用するトークンを発行する
  * 今回は時刻をトークンとする
  * -------------------------------------------------- */
 $token = strval(time());
+
+$_SESSION['id']= $id;
+$_SESSION['token'] = $token;
 
 ?>
 
@@ -72,11 +85,11 @@ $token = strval(time());
                 <tbody>
                 <tr>
                     <th><label for="name">名前</label></th>
-                    <td><input type="text" name="name" id="name" value="<?= $name ?>" required></td>
+                    <td><input type="text" name="name" id="name" value="<?= htmlspecialchars($name ?? '', ENT_QUOTES, 'UTF-8') ?>" required></td>
                 </tr>
                 <tr>
                     <th><label for="content">投稿内容</label></th>
-                    <td><textarea name="content" id="content" rows="4" required><?= $content ?></textarea></td>
+                    <td><textarea name="content" id="content" rows="4" required><?= htmlspecialchars($content ?? '', ENT_QUOTES, 'UTF-8') ?></textarea></td>
                 </tr>
                 </tbody>
             </table>

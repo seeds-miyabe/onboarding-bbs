@@ -5,11 +5,13 @@
 require_once 'private/bootstrap.php';
 require_once 'private/database.php';
 
+
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * セッションにも保存しておく
  * -------------------------------------------------- */
-$id = '';
+$connection = connectDB();
+$id = $_POST['id'] ?? '';
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
@@ -17,18 +19,36 @@ $id = '';
  * 1.値が入力されているか
  * 2.データベースに対象IDのレコードが存在するか
  * -------------------------------------------------- */
+if ($id === '' || !ctype_digit($id)) {
+    header('Location: index.php');
+    exit;
+}
+
+$sql = "SELECT * FROM articles WHERE id = ?";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$article = $stmt->get_result()->fetch_assoc();
+
+if (!$article) {
+    redirect('/index.php');
+}
 
 /* --------------------------------------------------
  * 削除する投稿のデータ
  * -------------------------------------------------- */
-$name = '';
-$content = '';
+$name = $article['name'];
+$content = $article['content'];
 
 /* --------------------------------------------------
  * 確認画面と削除画面で利用するトークンを発行する
  * 今回は時刻をトークンとする
  * -------------------------------------------------- */
 $token = strval(time());
+
+$_SESSION['id']= $id;
+$_SESSION['token'] = $token;
 
 ?>
 
@@ -49,8 +69,8 @@ $token = strval(time());
         <div>下記の内容を削除しますがよろしいですか?</div>
         <table>
             <tbody>
-            <tr><th>名前</th><td><?= $name ?></td></tr>
-            <tr><th>投稿内容</th><td><?= $content ?></td></tr>
+                <tr><th>名前</th><td><?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?></td></tr>
+                <tr><th>投稿内容</th><td><?= htmlspecialchars($content, ENT_QUOTES, 'UTF-8') ?></td></tr>
             </tbody>
         </table>
         <form action="delete_complete.php" method="post">

@@ -8,42 +8,52 @@ require_once 'private/database.php';
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * -------------------------------------------------- */
-$token = '';
-$name = '';
-$content = '';
+$token = $_POST['token'] ?? '';
+$name    = $_POST['name'] ?? '';
+$content = $_POST['content'] ?? '';
 
+$id = $_SESSION['id'] ?? '';
 /* --------------------------------------------------
  * 送られてきたトークンのバリデーション
  *
  * セッションに保存されているトークンと比較し、
  * 一致していなかった場合はトップ画面にリダイレクトする
  * -------------------------------------------------- */
-if(true) {
+if (!isset($_SESSION['token']) || $token === '' || $token !== $_SESSION['token']) {
+    unset($_SESSION['id']);
     unset($_SESSION['token']);
-    redirect('/index.php');
+    header('Location: index.php');
+    exit;
 }
 
 /* --------------------------------------------------
  * 値のバリデーションを行う
  * -------------------------------------------------- */
-if(true) {
-    redirect('/editing.php');
+if ($id === '' || !ctype_digit($id) || $name === '' || $content === '') {
+    header('Location: index.php');
+    exit;
 }
 
 /* --------------------------------------------------
  * セッション内に保存したIDを取得する
  * -------------------------------------------------- */
-$id = '';
+// $id = '';
+$id = $_SESSION['id'] ?? '';
 
 /* --------------------------------------------------
  * データの更新処理
  * -------------------------------------------------- */
+$connection = connectDB();
 
+$sql = "UPDATE articles SET name = ?, content = ? WHERE id = ?";
+$stmt = $connection->prepare($sql);
+$stmt->bind_param("ssi", $name, $content, $id);
+$stmt->execute();
 /* --------------------------------------------------
  * セッション内のデータを削除する
  * -------------------------------------------------- */
-unset($_SESSION['token']);
 unset($_SESSION['id']);
+unset($_SESSION['token']);
 
 ?>
 
