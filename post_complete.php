@@ -18,9 +18,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // $content = $_POST['content'] ?? '';
 
 $token = $_POST['token'] ?? '';
+$name    = $_SESSION['post'][$token]['name'] ?? '';
+$content = $_SESSION['post'][$token]['content'] ?? '';
 
-// $name    = $_SESSION['post'][$token]['name'] ?? '';
-// $content = $_SESSION['post'][$token]['content'] ?? '';
 
 /* --------------------------------------------------
  * 送られてきたトークンのバリデーション
