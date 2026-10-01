@@ -39,6 +39,12 @@ if ($token === '' || !isset($_SESSION['post'][$token])) {
     exit;
 }
 
+if ($name === '' || $content === '') {
+    unset($_SESSION['post'][$token]);
+    header('Location: index.php');
+    exit;
+}
+
 /* --------------------------------------------------
  * セッション内に保存した投稿内容を取得する
  * -------------------------------------------------- */
