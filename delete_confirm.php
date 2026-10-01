@@ -32,8 +32,7 @@ $stmt->execute();
 $article = $stmt->get_result()->fetch_assoc();
 
 if (!$article) {
-    header('Location: index.php');
-    exit;
+    redirect('/index.php');
 }
 
 /* --------------------------------------------------
@@ -48,7 +47,7 @@ $content = $article['content'];
  * -------------------------------------------------- */
 $token = strval(time());
 
-$_SESSION['delete'][$token] = $id;
+$_SESSION['id']= $id;
 
 ?>
 
