@@ -10,7 +10,6 @@ require_once 'private/database.php';
  * セッションにも保存しておく
  * -------------------------------------------------- */
 // $id = '';
-$connection = connectDB();
 $id = $_POST['id'] ?? '';
 
 /* --------------------------------------------------
@@ -24,6 +23,7 @@ if ($id === '' || !ctype_digit($id)) {
     redirect('/index.php');
 }
 
+$connection = connectDB();
 $sql = "SELECT * FROM articles WHERE id = ?";
 $stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $id);
@@ -50,6 +50,7 @@ $content = $article['content'];
 $token = strval(time());
 
 $_SESSION['id']= $id;
+$_SESSION['token'] = $token;
 
 ?>
 
@@ -92,10 +93,7 @@ $_SESSION['id']= $id;
                 </tr>
                 </tbody>
             </table>
-        </form>
-        <form action="edit_complete.php" method="post">
-                <input type="hidden" name="token" value="<?= $token ?>">
-                <button type="submit">編集</button>
+            <button type="submit">編集</button>
         </form>
     </main>
     <footer>

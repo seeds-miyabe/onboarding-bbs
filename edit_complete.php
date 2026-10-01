@@ -19,8 +19,9 @@ $id = $_SESSION['id'] ?? '';
  * セッションに保存されているトークンと比較し、
  * 一致していなかった場合はトップ画面にリダイレクトする
  * -------------------------------------------------- */
-if ($token === '' || !isset($_SESSION['id'])) {
-    unset($_SESSION['id'][$token]);
+if (!isset($_SESSION['token']) || $token === '' || $token !== $_SESSION['token']) {
+    unset($_SESSION['id']);
+    unset($_SESSION['token']);
     header('Location: index.php');
     exit;
 }
@@ -52,7 +53,7 @@ $stmt->execute();
  * セッション内のデータを削除する
  * -------------------------------------------------- */
 unset($_SESSION['id']);
-
+unset($_SESSION['token']);
 
 ?>
 
