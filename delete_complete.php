@@ -9,18 +9,17 @@ require_once 'private/database.php';
  * 送られてきた値を取得する
  * -------------------------------------------------- */
 $token = $_POST['token'] ?? '';
-$name    = $_POST['name'] ?? '';
-$content = $_POST['content'] ?? '';
 
 $id = $_SESSION['id'] ?? '';
+$session_token = $_SESSION['token'] ?? '';
 /* --------------------------------------------------
  * 送られてきたトークンのバリデーション
  *
  * セッションに保存されているトークンと比較し、
  * 一致していなかった場合はトップ画面にリダイレクトする
  * -------------------------------------------------- */
-if ($token === '' || !isset($_SESSION['id'])) {
-    unset($_SESSION['id'][$token]);
+if ($token === '' || $token !== $session_token || $id === '' || !ctype_digit($id)) {
+    unset($_SESSION['id'], $_SESSION['token']);
     header('Location: index.php');
     exit;
 }

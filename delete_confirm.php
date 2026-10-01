@@ -48,6 +48,7 @@ $content = $article['content'];
 $token = strval(time());
 
 $_SESSION['id']= $id;
+$_SESSION['token'] = $token;
 
 ?>
 
