@@ -92,10 +92,10 @@ $_SESSION['id']= $id;
                 </tr>
                 </tbody>
             </table>
-            <form action="edit_complete.php" method="post">
+        </form>
+        <form action="edit_complete.php" method="post">
                 <input type="hidden" name="token" value="<?= $token ?>">
                 <button type="submit">編集</button>
-            </form>
         </form>
     </main>
     <footer>
