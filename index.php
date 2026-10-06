@@ -8,7 +8,9 @@ require_once 'private/database.php';
 /* ----------------------------------------
  * セッション開始
  * ---------------------------------------- */
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 /* ----------------------------------------
  * データベース接続
@@ -18,12 +20,7 @@ $connection = connectDB();
 /* ----------------------------------------
  * データベースから投稿されている内容を取得する
  * ---------------------------------------- */
-
-// ダミーデータ
-$articles = [
-    ['id' => 1, 'name' => 'Dummy', 'content' => 'Dummyコンテンツ', 'created_at' => '2020-12-09 00:00:00', 'updated_at' => '2020-12-09 00:00:00'],
-    ['id' => 2, 'name' => 'ダミー', 'content' => 'ダミーContent', 'created_at' => '2020-12-09 12:00:00', 'updated_at' => '2020-12-09 12:00:00'],
-];
+$articles = $connection->query("SELECT * FROM articles ORDER BY id DESC")->fetch_all(MYSQLI_ASSOC);
 
 ?>
 
@@ -56,10 +53,17 @@ $articles = [
             <?php foreach ($articles as $article) { ?>
                 <li>
                     <div>
-                        <?= $article['id'] ?>:&nbsp;<?=$article['name'] ?>&nbsp;<?= $article['updated_at'] ?>
+                        <?= htmlspecialchars($article['id'], ENT_QUOTES, 'UTF-8') ?>:&nbsp;
+                        <?= htmlspecialchars($article['name'], ENT_QUOTES, 'UTF-8') ?>&nbsp;
+                        <?= htmlspecialchars($article['updated_at'], ENT_QUOTES, 'UTF-8') ?>
+                        <!-- <?= htmlspecialchars($article['content'], ENT_QUOTES, 'UTF-8') ?>:&nbsp;
+                        <?= htmlspecialchars($article['created_at'], ENT_QUOTES, 'UTF-8') ?>&nbsp;
+                        <?= htmlspecialchars($article['updated_at'], ENT_QUOTES, 'UTF-8') ?> -->
                     </div>
-                    <div><?= $article['content'] ?></div>
-                    <div style="display: inline-flex; display: none">
+                    <div>
+                        <?= nl2br(htmlspecialchars($article['content'], ENT_QUOTES, 'UTF-8')) ?>
+                    </div>
+                    <div style="display: inline-flex;">
                         <form action="editing.php" method="post">
                             <input type="hidden" name="id" value="<?= $article['id'] ?>">
                             <button type="submit">編集</button>
