@@ -30,8 +30,7 @@ $articles = $result->fetch_all(MYSQLI_ASSOC);
 $sql = "SELECT id, name, content, created_at, updated_at FROM posts ORDER BY id DESC";
 $sql = "SELECT id, name, content, created_at, updated_at FROM articles ORDER BY id DESC";
 
-$result = $connection->query($sql);
-$articles = $result->fetch_all(MYSQLI_ASSOC);
+$articles = $connection->query($sql)->fetch_all(MYSQLI_ASSOC);
 
 ?>
 
