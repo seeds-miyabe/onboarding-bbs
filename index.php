@@ -20,8 +20,7 @@ $connection = connectDB();
 /* ----------------------------------------
  * データベースから投稿されている内容を取得する
  * ---------------------------------------- */
-$result = $connection->query("SELECT * FROM articles ORDER BY id DESC");
-$articles = $result->fetch_all(MYSQLI_ASSOC);
+$articles = $connection->query("SELECT * FROM articles ORDER BY id DESC")->fetch_all(MYSQLI_ASSOC);
 // ダミーデータ
 /* $articles = [
     ['id' => 1, 'name' => 'Dummy', 'content' => 'Dummyコンテンツ', 'created_at' => '2020-12-09 00:00:00', 'updated_at' => '2020-12-09 00:00:00'],
