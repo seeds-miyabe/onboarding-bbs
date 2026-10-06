@@ -14,8 +14,6 @@ if (session_status() === PHP_SESSION_NONE) {
 /* --------------------------------------------------
  * 送られてきた値を取得する
  * -------------------------------------------------- */
-// $name = $_POST['name'] ?? '';
-// $content = $_POST['content'] ?? '';
 
 $token = $_POST['token'] ?? '';
 $name    = $_SESSION['post'][$token]['name'] ?? '';
@@ -28,10 +26,6 @@ $content = $_SESSION['post'][$token]['content'] ?? '';
  * セッションに保存されているトークンと比較し、
  * 一致していなかった場合はトップ画面にリダイレクトする
  * -------------------------------------------------- */
-// if(true) {
-//     unset($_SESSION['token']);
-//     redirect('/index.php');
-// }
 
 if ($token === '' || !isset($_SESSION['post'][$token])) {
     unset($_SESSION['post'][$token]);
@@ -66,9 +60,6 @@ $stmt->execute();
  * セッション内のデータを削除する
  * -------------------------------------------------- */
 unset($_SESSION['post'][$token]);
-
-// header('Location: index.php');
-// exit;
 
 ?>
 

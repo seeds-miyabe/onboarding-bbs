@@ -53,9 +53,6 @@ $stmt->execute();
  * -------------------------------------------------- */
 unset($_SESSION['id'], $_SESSION['token']);
 
-// header('Location: index.php');
-// exit;
-
 ?>
 
 <!-- 描画するHTML -->

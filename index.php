@@ -21,15 +21,6 @@ $connection = connectDB();
  * データベースから投稿されている内容を取得する
  * ---------------------------------------- */
 $articles = $connection->query("SELECT * FROM articles ORDER BY id DESC")->fetch_all(MYSQLI_ASSOC);
-// ダミーデータ
-/* $articles = [
-    ['id' => 1, 'name' => 'Dummy', 'content' => 'Dummyコンテンツ', 'created_at' => '2020-12-09 00:00:00', 'updated_at' => '2020-12-09 00:00:00'],
-    ['id' => 2, 'name' => 'ダミー', 'content' => 'ダミーContent', 'created_at' => '2020-12-09 12:00:00', 'updated_at' => '2020-12-09 12:00:00'],
-]; */
-// $sql = "SELECT id, name, content, created_at, updated_at FROM posts ORDER BY id DESC";
-// $sql = "SELECT id, name, content, created_at, updated_at FROM articles ORDER BY id DESC";
-
-// $articles = $connection->query($sql)->fetch_all(MYSQLI_ASSOC);
 
 ?>
 
